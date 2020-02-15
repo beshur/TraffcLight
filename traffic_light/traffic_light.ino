@@ -15,6 +15,7 @@ int buttonValue = LOW;
 int buttonValueNew = LOW;
 int buttonPressed = 0;
 int clickCounter = 0;
+byte currentTaskId = 0;
 
 byte leds[3] = {3, 4, 5};
 
@@ -54,9 +55,12 @@ void onButtonPress() {
   clickCounter++;
   buttonValueNew = !buttonValueNew;
   buttonPressed = 0;
-
+  // only 0/1 for now
+  currentTaskId = !currentTaskId;
+  
   digitalWrite(LED_BUILTIN, clickCounter%2);
-
+  Serial.print("onButtonPress");
+  Serial.println(currentTaskId);
 }
 
 int setNextTarget() {
@@ -82,9 +86,18 @@ void updateColorPosition() {
   currentState[colorPosition] = 1;
 }
 
-void loop() {
-  checkButtonState();
-  
+void resetPattern() {
+  colorPosition = 0;
+  currentPositionInPattern = -1;
+  targetTime = 0;
+
+  for (int i = 0; i < 3; i++) {
+    currentState[i] = 0;
+    digitalWrite(leds[i], 0);
+  }
+}
+
+void playPattern() {
   currentTime = millis();
 
   if (currentTime >= targetTime) {
@@ -115,4 +128,18 @@ void loop() {
     Serial.print(currentState[2]);
     Serial.println(" x");
   }
+}
+
+void playCurrentTask() {
+  if (currentTaskId == 0) {
+    playPattern(); 
+  } else {
+    resetPattern();
+  }
+}
+
+void loop() {
+  checkButtonState();
+  
+  playCurrentTask();
 }
