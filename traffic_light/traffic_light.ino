@@ -5,8 +5,8 @@ unsigned long targetTime = 0;
 byte currentPositionInPattern = -1;
 byte colorPosition = 0;
 bool currentState[3] = { 0, 0, 0 };
-int currentPattern[] = { 1000, 0, 1000, 0, 1000 };
-//int currentPattern[] = { 5000, 300, 300, 0, 200, 200, 200, 200, 200, 200, 0, 5000 };
+//int currentPattern[] = { 1000, 0, 1000, 0, 1000 };
+int currentPattern[] = { 5000, 0, 200, 200, 200, 200, 200, 200, 0, 5000, 300, 300 };
 
 int currentPatternLength = (sizeof(currentPattern))/(sizeof(currentPattern[0]));
 int nextTarget;
@@ -29,12 +29,14 @@ void setup() {
     digitalWrite(leds[i], HIGH);
     Serial.println("led" + String(leds[i]));
   }
-  currentState[colorPosition] = true;
   Serial.println("Hello");
   Serial.print("basicPattern length ");
   Serial.println(currentPatternLength);
 
-  delay(1000);
+  delay(350);
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(leds[i], LOW);
+  }
 }
 
 void checkButtonState() {
@@ -75,6 +77,7 @@ void updateColorPosition() {
   colorPosition++;
   if (colorPosition > 2) {
     colorPosition = 0;
+    currentPositionInPattern = 0;
   }
   currentState[colorPosition] = 1;
 }
@@ -88,7 +91,10 @@ void loop() {
     updateCurrentPositionInPattern();
     setNextTarget();
 
-    if (nextTarget == 0) {
+    if (targetTime == 0) {
+      // start
+      currentState[colorPosition] = !currentState[colorPosition];
+    } else if (nextTarget == 0) {
       updateCurrentPositionInPattern();
       updateColorPosition();
       setNextTarget();
@@ -107,6 +113,6 @@ void loop() {
     Serial.print(currentState[0]);
     Serial.print(currentState[1]);
     Serial.print(currentState[2]);
-    Serial.println("-----");
+    Serial.println(" x");
   }
 }
