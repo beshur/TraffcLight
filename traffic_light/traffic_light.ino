@@ -1,4 +1,13 @@
-// traffic_light.c for Arduino
+/*
+  traffic_light.ino for Arduino
+
+  Pinout:
+  D2 - Pushbutton
+  D3 - Green LED
+  D4 - Yellow LED
+  D5 - Red LED
+
+*/
 
 unsigned long currentTime = 0;
 unsigned long targetTime = 0;
@@ -57,7 +66,7 @@ void onButtonPress() {
   buttonPressed = 0;
   // only 0/1 for now
   currentTaskId = !currentTaskId;
-  
+
   digitalWrite(LED_BUILTIN, clickCounter%2);
   Serial.print("onButtonPress");
   Serial.println(currentTaskId);
@@ -132,7 +141,7 @@ void playPattern() {
 
 void playCurrentTask() {
   if (currentTaskId == 0) {
-    playPattern(); 
+    playPattern();
   } else {
     resetPattern();
   }
@@ -140,6 +149,6 @@ void playCurrentTask() {
 
 void loop() {
   checkButtonState();
-  
+
   playCurrentTask();
 }
