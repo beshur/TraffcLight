@@ -14,7 +14,18 @@ unsigned long targetTime = 0;
 byte currentPositionInPattern = -1;
 byte colorPosition = 0;
 bool currentState[3] = { 0, 0, 0 };
-//int currentPattern[] = { 1000, 0, 1000, 0, 1000 };
+
+/*
+  Pattern is actual blinking pattern
+  0 and array end is treated as a switch to next color
+  time in ms
+
+  Example: { 100, 100, 100, 0, 100, 0, 100 }
+  will result in:
+    red 100ms on, red 100ms off, red 100ms on
+    yellow 100ms on
+    green 100 ms on
+*/
 int currentPattern[] = { 5000, 0, 200, 200, 200, 200, 200, 200, 0, 5000, 300, 300 };
 
 int currentPatternLength = (sizeof(currentPattern))/(sizeof(currentPattern[0]));
